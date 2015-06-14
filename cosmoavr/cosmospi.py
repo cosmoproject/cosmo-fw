@@ -49,7 +49,7 @@ class CosmoSpi(threading.Thread):
         self._txmsg = self._txmsg[n:]
         if len(to_send) < n:
             to_send.extend([0] * (n-len(to_send)))
-        ret = self.spi.xfer(to_send, int(150e3), 10, 8)
+        ret = self.spi.xfer(to_send, int(100e3), 100, 8)
         #print("Exchanging", to_send, ret)
         return ret
         
@@ -115,8 +115,8 @@ class CosmoSpi(threading.Thread):
                         break
                     else:
                         packet.append(d)
-            command = packet[0]
-            if command in self._pending:
+            if len(packet) > 0 and packet[0] in self._pending:
+                command = packet[0]
                 self._pending[command].put(packet[1:])
                 del self._pending[command]
             else:
