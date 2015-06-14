@@ -3,7 +3,7 @@ MCU_TARGET := atmega1284p
 AVRDUDE := avrdude -c linuxspi -p m1284p -P /dev/spidev0.0
 CC := avr-gcc
 OBJDUMP := avr-objdump
-CFLAGS := -g3 -Os -Wall -std=gnu99 -mmcu=$(MCU_TARGET) -flto -fshort-enums -Wno-pointer-sign -Wextra
+CFLAGS := -g3 -Os -Wall -std=gnu99 -mmcu=$(MCU_TARGET) -flto -fshort-enums -Wno-pointer-sign -Wextra -DF_CPU=16000000ul
 LDFLAGS := $(CFLAGS)
 
 OBJECTS := $(patsubst %.c,%.o,$(wildcard *.c))

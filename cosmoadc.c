@@ -50,6 +50,7 @@ static void set_gpio(const uint8_t *data, uint8_t count) {
 int main() {
   adc_init();
   spi_init();
+  midi_init();
   sei();
   while(1) {
     const uint8_t *rxbuf;
