@@ -64,6 +64,7 @@ class CosmoSpi(threading.Thread):
     def run(self):
         data = []
         last = -1
+        escaped = False
         while not self._stop:
             if not data:
                 if not self._txmsg:
@@ -72,6 +73,8 @@ class CosmoSpi(threading.Thread):
                         if handler is not None:
                             self._txmsg += [0]*4 # For start of reply
                             command = self._txmsg[1]
+                            if command == ESCAPE:
+                                command = self._txmsg[2]
                             assert command not in self._pending
                             self._pending[command] = handler
                     except Queue.Empty:
@@ -96,7 +99,7 @@ class CosmoSpi(threading.Thread):
             while not stop_found and not self._stop:
                 if not data:
                     data = self._readbytes(max(10, len(self._txmsg)))
-                escaped = False
+                
                 while data:
                     d = data.pop(0)
                     if escaped:
@@ -117,4 +120,5 @@ class CosmoSpi(threading.Thread):
                 self._pending[command].put(packet[1:])
                 del self._pending[command]
             else:
+                print("Async", packet, self._pending)
                 self._rxq.put(packet)

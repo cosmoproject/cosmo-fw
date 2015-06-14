@@ -20,5 +20,5 @@ class CosmoHat(cosmospi.CosmoSpi):
 
     def get_gpios(self):
         data, = self.call(2)
-        return data
-        
+        return [(data & (1<<i)) != 0 for i in xrange(4)]
+    
