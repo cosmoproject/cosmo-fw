@@ -7,9 +7,9 @@ static uint16_t results[8];
 static uint8_t dirty = 0;
 ISR(ADC_vect) {
   static uint8_t adc = 0;
-  results[adc] = ADC;
+  results[(adc-1) & 7] = ADC;
   adc = (adc + 1) & 7;
-  ADMUX = (1<<REFS0) | adc;
+  ADMUX = (1<<REFS0) | adc; // Current transaction have already started.
   dirty |= (1<<adc);
 }
 
