@@ -43,14 +43,14 @@ static void set_gpio(const uint8_t *data, uint8_t count) {
   uint8_t dir = data[1]<<4;
   uint8_t set = data[2]<<4;
   
-  DDRB = (DDRB & ~mask) | dir;
-  PORTB = (PORTB & ~mask) | set;
+  DDRD = (DDRD & ~mask) | dir;
+  PORTD = (PORTD & ~mask) | set;
 }
 
 int main() {
   adc_init();
   spi_init();
-  midi_init();
+  //midi_init();
   sei();
   while(1) {
     const uint8_t *rxbuf;

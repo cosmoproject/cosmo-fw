@@ -8,8 +8,8 @@ static uint8_t dirty = 0;
 ISR(ADC_vect) {
   static uint8_t adc = 0;
   results[adc] = ADC;
-  ADMUX = (1<<REFS0) | adc;
   adc = (adc + 1) & 7;
+  ADMUX = (1<<REFS0) | adc;
   dirty |= (1<<adc);
 }
 
@@ -23,7 +23,7 @@ uint16_t adc_read(uint8_t mux) {
   mux &= 7;
   uint8_t mask = 1<<mux;
   while((dirty & mask) == 0);
-  uint8_t ret = results[mux & 7];
+  uint16_t ret = results[mux & 7];
   cli();
   dirty &= ~mask;
   sei();
