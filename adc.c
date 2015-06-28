@@ -18,6 +18,7 @@ ISR(ADC_vect) {
   count[last] += 1;
   if (count[last] >= N_OVERSAMPLES) {
     results[last] = tmp[last];
+    tmp[last] = 0;
     dirty |= (1<<last);
   }
 }
