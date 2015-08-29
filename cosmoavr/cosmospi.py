@@ -49,7 +49,7 @@ class CosmoSpi(threading.Thread):
         self._txmsg = self._txmsg[n:]
         if len(to_send) < n:
             to_send.extend([0] * (n-len(to_send)))
-        ret = self.spi.xfer(to_send, int(100e3), 100, 8)
+        ret = self.spi.xfer(to_send, int(5e3), 100, 8)
         #print("Exchanging", to_send, ret)
         return ret
         
