@@ -2,6 +2,7 @@ from __future__ import print_function
 import spidev
 import threading
 import Queue
+import subprocess
 
 START = 2
 END = 3
@@ -9,6 +10,7 @@ ESCAPE = 16
 
 class CosmoSpi(threading.Thread):
     def __init__(self):
+        self._init_reset()
         self.spi = spidev.SpiDev(0,0)
         self.spi.max_speed_hz = int(500e3)
         threading.Thread.__init__(self)
@@ -18,6 +20,18 @@ class CosmoSpi(threading.Thread):
         self._txmsg = []
         self._stop = False
         self._pending = {}
+
+    def _init_reset(self):
+        PIN=25
+        try:
+            with open("/sys/class/gpio/export", "w") as f:
+                f.write(str(PIN)+"\n")
+            with open("/sys/class/gpio/gpio"+str(PIN)+"/direction", "w") as f:
+                f.write("out\n")
+            with open("/sys/class/gpio/gpio"+str(PIN)+"/value", "w") as f:
+                f.write("1\n")
+        except IOError:
+            pass
 
     def _escape(self, data):
         ret = []
@@ -49,7 +63,7 @@ class CosmoSpi(threading.Thread):
         self._txmsg = self._txmsg[n:]
         if len(to_send) < n:
             to_send.extend([0] * (n-len(to_send)))
-        ret = self.spi.xfer(to_send, int(100e3), 100, 8)
+        ret = self.spi.xfer(to_send, int(5e3), 100, 8)
         #print("Exchanging", to_send, ret)
         return ret
         

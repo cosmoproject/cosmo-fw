@@ -32,10 +32,26 @@ static void read_adc(const uint8_t *data, uint8_t count) {
   }
   spi_send(reply_buffer, 2*j+1);
 }
+/* GPIOS:
+      avr  rpi
+   1: PD4  GPIO5
+   2: PD5  GPIO6
+   3: PD6  GPIO13
+   4: PD7  GPIO19
+   5: PC2  GPIO26
+   6: PC3  GPIO12
+   7: PC4  GPIO16
+   8: PC5  GPIO20
+ */
+
 static void read_gpio(const uint8_t *data, uint8_t count) {
-  uint8_t reply_buffer[] = {CMD_READ_GPIO, PIND>>4};
-  spi_send(reply_buffer, 2);
+  (void)data;
+  (void)count;
+  // 76543210 CCCCDDDD
+  uint8_t reply_buffer[] = {CMD_READ_GPIO, (PIND>>4) | ((PINC & 0x3c)<<2)};
+  spi_send(reply_buffer, sizeof(reply_buffer));
 }
+
 static void set_gpio(const uint8_t *data, uint8_t count) {
   if (count < 3)
     return;
@@ -43,8 +59,13 @@ static void set_gpio(const uint8_t *data, uint8_t count) {
   uint8_t dir = data[1]<<4;
   uint8_t set = data[2]<<4;
   
-  DDRD = (DDRD & ~mask) | dir;
-  PORTD = (PORTD & ~mask) | set;
+  uint8_t dmask = (mask << 4) & 0xf0;
+  DDRD = (DDRD & ~dmask) | (dir << 4);
+  PORTD = (PORTD & ~dmask) | (set << 4);
+
+  uint8_t cmask = ((mask>>2) & 0x3c);
+  DDRC = (DDRC & ~cmask) | ((dir>>2) & 0x3c);
+  PORTD = (PORTD & ~cmask) | ((set>>2) & 0x3c);
 }
 
 int main() {
@@ -62,7 +83,7 @@ int main() {
     count -= 1;
     switch(command) {
     case CMD_VERSION: {
-      const uint8_t data[] = {CMD_VERSION, 'C', 'o', 's', 'm', 'o', ' ', '0', '.', '1'};
+      const uint8_t data[] = {CMD_VERSION, 'C', 'o', 's', 'm', 'o', ' ', '0', '.', '2'};
       spi_send(data, sizeof(data));
       break;
     }
