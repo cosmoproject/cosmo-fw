@@ -3,27 +3,33 @@ from cosmoavr.cosmohat import CosmoHat
 import time
 
 def main(c):
-    c.start()
     print("Got version '{}'".format(c.version()))
-    c.set_gpios({0: (1, 1),
-                 1: (1, 1),
-                 2: (1, 1),
-                 3: (1, 1)})
     i = 0
     while True:
-        adcs = c.adcs()
-        print("ADC:", adcs)
-        a = adcs[0]
-        #print("GPIO:", c.get_gpios())
-        c.set_gpios({0: (a > 1000/3, 1),
-                     1: (a > 2000/3, 1),
-                     2: (a > 1000, 1),
-                     3: (i & 8, 1)})
-        time.sleep(0.1)
+        i += 1
+        inputs = c.switches()
+        #print(inputs)
+        for i, nob in enumerate(c.nobs()):
+            print("{}: ".format(i) + "=" * int(nob*80))
+        print("")
+        c.set_leds(dict((i, inp) for i, inp in enumerate(inputs)))
+        
+        #adcs = c.adcs()
+        #print("ADC:", adcs)
+        time.sleep(0.05)
                 
         
 if __name__ == "__main__":
-    c = CosmoHat()
+    c = CosmoHat(
+        switches=[0,1,2,3],
+        leds=[4,7,6,5],
+        nobs=[(0, (8057, 0)),
+              (1, (8056, 0)),
+              (2, (8056, 0)),
+              (3, (8057, 0)),
+              (4, (8056, 0)),
+              (6, (8056, 0)),
+              (7, (8058, 0))])
     try:
         main(c)
     except KeyboardInterrupt:

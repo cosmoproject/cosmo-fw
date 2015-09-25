@@ -55,9 +55,9 @@ static void read_gpio(const uint8_t *data, uint8_t count) {
 static void set_gpio(const uint8_t *data, uint8_t count) {
   if (count < 3)
     return;
-  uint8_t mask = data[0]<<4;
-  uint8_t dir = data[1]<<4;
-  uint8_t set = data[2]<<4;
+  uint8_t mask = data[0];
+  uint8_t dir = data[1];
+  uint8_t set = data[2];
   
   uint8_t dmask = (mask << 4) & 0xf0;
   DDRD = (DDRD & ~dmask) | (dir << 4);
@@ -65,7 +65,7 @@ static void set_gpio(const uint8_t *data, uint8_t count) {
 
   uint8_t cmask = ((mask>>2) & 0x3c);
   DDRC = (DDRC & ~cmask) | ((dir>>2) & 0x3c);
-  PORTD = (PORTD & ~cmask) | ((set>>2) & 0x3c);
+  PORTC = (PORTD & ~cmask) | ((set>>2) & 0x3c);
 }
 
 int main() {
