@@ -35,7 +35,9 @@ def main(c):
                 cs.SetChannel("P"+str(i), nob)
                 print("{}: ".format(i) + "=" * int(nob*80))
         leds = {}
-        for i, sw in enumerate(c.switches()):
+        switches = c.switches()
+        print(switches)
+        for i, sw in enumerate(switches):
             leds[i] = sw != ((count+i) % 8 != 0)
         c.set_leds(leds)
         
