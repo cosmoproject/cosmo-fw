@@ -4,6 +4,7 @@ import threading
 import time
 import Queue
 import subprocess
+import os.path
 
 START = 2
 END = 3
@@ -24,17 +25,18 @@ class CosmoSpi(threading.Thread):
 
     def _init_reset(self):
         PIN=25
-        try:
+        gpio_path = "/sys/class/gpio/gpio"+str(PIN)
+        j = lambda f: os.path.join(gpio_path, f)
+        if not os.path.exists(gpio_path):
             with open("/sys/class/gpio/export", "w") as f:
                 f.write(str(PIN)+"\n")
-            with open("/sys/class/gpio/gpio"+str(PIN)+"/direction", "w") as f:
-                f.write("out\n")
-        except IOError, e:
-            print("Reset failed",e)
-        with open("/sys/class/gpio/gpio"+str(PIN)+"/value", "w") as f:
+        
+        with open(j("direction"), "w") as f:
+            f.write("out\n")
+        with open(j("value"), "w") as f:
             f.write("0\n")
         time.sleep(0.05)
-        with open("/sys/class/gpio/gpio"+str(PIN)+"/value", "w") as f:
+        with open(j("value"), "w") as f:
             f.write("1\n")
 
     def _escape(self, data):
