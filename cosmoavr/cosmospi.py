@@ -38,6 +38,7 @@ class CosmoSpi(threading.Thread):
         time.sleep(0.05)
         with open(j("value"), "w") as f:
             f.write("1\n")
+        time.sleep(0.05)
 
     def _escape(self, data):
         ret = []
