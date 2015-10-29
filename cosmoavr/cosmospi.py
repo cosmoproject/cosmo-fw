@@ -1,6 +1,7 @@
 from __future__ import print_function
 import spidev
 import threading
+import time
 import Queue
 import subprocess
 
@@ -28,10 +29,13 @@ class CosmoSpi(threading.Thread):
                 f.write(str(PIN)+"\n")
             with open("/sys/class/gpio/gpio"+str(PIN)+"/direction", "w") as f:
                 f.write("out\n")
-            with open("/sys/class/gpio/gpio"+str(PIN)+"/value", "w") as f:
-                f.write("1\n")
-        except IOError:
-            pass
+        except IOError, e:
+            print("Reset failed",e)
+        with open("/sys/class/gpio/gpio"+str(PIN)+"/value", "w") as f:
+            f.write("0\n")
+        time.sleep(0.05)
+        with open("/sys/class/gpio/gpio"+str(PIN)+"/value", "w") as f:
+            f.write("1\n")
 
     def _escape(self, data):
         ret = []
