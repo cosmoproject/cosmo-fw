@@ -7,6 +7,7 @@ def main(c):
     i = 0
     while True:
         c.ws2812([(i, i+1, i+2), (0xa, 0xb, 0xc)])
+        i+=10
         time.sleep(0.25)
     while True:
         i += 1
