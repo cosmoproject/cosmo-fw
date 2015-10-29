@@ -48,14 +48,14 @@ static void update_transmit() {
     return;
   }
 
-  UCSR0B |= (1<<UDRIE0);
+  UCSR0B |= (1<<UDRIE0); // Enable interrupt on done
   UDR0 = txbuf[count];
   count += 1;
 }
 
 ISR(USART0_UDRE_vect)
 {
-  update_transmit();
+  update_transmit(); // Next or disable
 }
 ISR(TIMER0_COMPA_vect)
 {
@@ -79,6 +79,7 @@ void ws2812_init() {
   // Important: The baud rate must be set after the transmitter is enabled
   UBRR0 = UBRR_SETTING;
 }
+
 void ws2812_set(const struct color *settings, uint8_t n) {
   uint8_t i, j;
   for (i = 0, j = 0; i < n; i += 1, j += 3) {

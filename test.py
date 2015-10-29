@@ -6,6 +6,9 @@ def main(c):
     print("Got version '{}'".format(c.version()))
     i = 0
     while True:
+        c.ws2812([(i, i+1, i+2), (0xa, 0xb, 0xc)])
+        time.sleep(0.25)
+    while True:
         i += 1
         inputs = c.switches()
         #print(inputs)

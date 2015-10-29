@@ -23,6 +23,12 @@ class CosmoHat(cosmospi.CosmoSpi):
     def version(self):
         return ''.join(chr(x) for x in self.call(0))
 
+    def ws2812(self, leds):
+        cmd = [4]
+        for r, g, b in leds:
+            cmd.extend((r, g, b))
+        self.write(cmd)
+
     def switches(self):
         gpios = self._get_gpios()
         return [gpios[sw] for sw in self._switches]

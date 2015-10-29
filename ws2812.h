@@ -1,5 +1,5 @@
 #pragma once
-struct color {
+struct __attribute__ ((__packed__)) color {
   uint8_t r,g,b;
 };
 void ws2812_init(void);

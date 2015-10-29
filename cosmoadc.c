@@ -71,13 +71,14 @@ static void set_gpio(const uint8_t *data, uint8_t count) {
 }
 
 static void set_leds(const uint8_t *data, uint8_t count) {
-  
+  ws2812_set((const struct color *)data, count/3);
 }
 
 int main() {
   adc_init();
   spi_init();
   //midi_init();
+  ws2812_init();
   sei();
   while(1) {
     const uint8_t *rxbuf;
