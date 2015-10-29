@@ -13,7 +13,7 @@ static uint8_t bufsize;
 static uint8_t count;
 static volatile uint8_t tx_busy = 0;
 
-const uint8_t PROGMEM gamma[] = {
+static const uint8_t PROGMEM gamma[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2,
@@ -53,7 +53,7 @@ static void update_transmit() {
   count += 1;
 }
 
-ISR(USART_UDRE_vect)
+ISR(USART0_UDRE_vect)
 {
   update_transmit();
 }
@@ -73,6 +73,7 @@ static void start_transmit() {
 void ws2812_init() {
   DDRB = (1<<PB0); // XCK pin
   UBRR0 = 0;
+#define UCPHA0 1
   UCSR0C = (1<<UMSEL01) | (1<<UMSEL00) | (1 << UCPHA0) | (0 << UCPOL0);
   UCSR0B = (1<<TXEN0);
   // Important: The baud rate must be set after the transmitter is enabled
@@ -86,4 +87,5 @@ void ws2812_set(const struct color *settings, uint8_t n) {
     txbuf[j+2] = pgm_read_byte(&gamma[settings[i].b]);
   }
   bufsize = j;
+  start_transmit();
 }
