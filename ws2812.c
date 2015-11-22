@@ -6,7 +6,7 @@
 
 #include "ws2812.h"
 
-static const uint32_t BAUD = 800000;
+static const uint32_t BAUD = 400000;
 #define UBRR_SETTING (F_CPU/(2*BAUD) - 1)
 static uint8_t txbuf[3*20];
 static uint8_t bufsize;
@@ -43,7 +43,7 @@ static void update_transmit() {
     // Transmission almost done, just wait 50us
     UCSR0B &= ~(1<<UDRIE0);
 
-    UDR0 = 0;
+    //UDR0 = 0;
     start_timer8(1000/8);
     return;
   }
@@ -71,7 +71,7 @@ static void start_transmit() {
 }
 
 void ws2812_init() {
-  DDRB = (1<<PB0); // XCK pin
+  DDRB |= (1<<PB0); // XCK pin
   UBRR0 = 0;
 #define UCPHA0 1
   UCSR0C = (1<<UMSEL01) | (1<<UMSEL00) | (1 << UCPHA0) | (0 << UCPOL0);
