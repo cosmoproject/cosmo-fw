@@ -9,6 +9,8 @@ import os.path
 START = 2
 END = 3
 ESCAPE = 16
+class NoAvrAnswer(Exception):
+    pass
 
 class CosmoSpi(threading.Thread):
     def __init__(self):
@@ -23,22 +25,26 @@ class CosmoSpi(threading.Thread):
         self._stop = False
         self._pending = {}
 
-    def _init_reset(self):
+    def _init_reset(self, reset=False):
         PIN=25
         gpio_path = "/sys/class/gpio/gpio"+str(PIN)
         j = lambda f: os.path.join(gpio_path, f)
         if not os.path.exists(gpio_path):
             with open("/sys/class/gpio/export", "w") as f:
                 f.write(str(PIN)+"\n")
-        
-        with open(j("direction"), "w") as f:
-            f.write("out\n")
-        with open(j("value"), "w") as f:
-            f.write("0\n")
-        time.sleep(0.05)
+            time.sleep(0.1)
+
+        if open(j("direction")).read().strip() != "out":
+            with open(j("direction"), "w") as f:
+                f.write("out\n")
+        if reset:
+            with open(j("value"), "w") as f:
+                f.write("0\n")
+            time.sleep(0.05)
         with open(j("value"), "w") as f:
             f.write("1\n")
-        time.sleep(0.05)
+        if reset:
+            time.sleep(0.1)
 
     def _escape(self, data):
         ret = []
@@ -48,13 +54,19 @@ class CosmoSpi(threading.Thread):
             ret.append(d)
         return ret
 
-    def call(self, command, data=[]):
+    def call(self, command, data=[], retry=True):
         packet = [command] + data
         packet = [START] + self._escape(packet) + [END]
         reply_q = Queue.Queue(maxsize=1)
         self._txq.put((reply_q, packet))
-        return reply_q.get(timeout=1)
-        
+        try:
+            return reply_q.get(timeout=1)
+        except Queue.Empty:
+            if retry:
+                self._init_reset(reset=True)
+                self.call(command, data, retry=False)
+            else:
+                raise NoAvrAnswer()
 
     def write(self, packet):
         self._txq.put((None, [START] + self._escape(packet) + [END]))
