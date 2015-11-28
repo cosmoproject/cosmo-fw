@@ -19,7 +19,10 @@ import csnd6
 #csoundFile = "/home/pi/csound/FX4_Shutter2.csd"
 #csoundFile = "/home/pi/csound/FX5_BerntDuo_Repeater2.csd"
 #csoundFile = "/home/pi/csound/csound_conf2015.csd"
-csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer-kknob-test.csd"
+#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
+#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/switch-led-test.csd"
+#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer.csd"
+csoundFile = "/home/pi/cosmo-dsp/Effects/ExampleSetup.csd"
 
 def safesleep(amt):
     if amt > 0:
