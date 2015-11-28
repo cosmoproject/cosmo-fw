@@ -82,7 +82,7 @@ class CosmoSpi(threading.Thread):
         self._txmsg = self._txmsg[n:]
         if len(to_send) < n:
             to_send.extend([0] * (n-len(to_send)))
-        ret = self.spi.xfer(to_send, int(5e3), 100, 8)
+        ret = self.spi.xfer(to_send, int(50e3), 100, 8)
         #print("Exchanging", to_send, ret)
         return ret
         
@@ -108,7 +108,7 @@ class CosmoSpi(threading.Thread):
                             command = self._txmsg[1]
                             if command == ESCAPE:
                                 command = self._txmsg[2]
-                            assert command not in self._pending
+                            #assert command not in self._pending
                             self._pending[command] = handler
                     except Queue.Empty:
                         pass
