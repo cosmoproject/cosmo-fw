@@ -43,14 +43,17 @@ class CosmoHat(cosmospi.CosmoSpi):
         self._set_gpios(dict((self._leds[n], (1, setting))
                              for n, setting in settings.items()))
 
-    def nobs(self):
+    def nobs(self, raw=False):
         adcs = self._adcs(nob for nob, _ in self._nobs)
         ret = []
         for value, (nob, (zero, full)) in zip(adcs, self._nobs):
-            if zero > full:
-                ret.append((value-zero)/(full-zero))
+            if raw:
+                ret.append(value)
             else:
-                ret.append((value-full)/(zero-full))
+                if zero > full:
+                    ret.append((value-zero)/(full-zero))
+                else:
+                    ret.append((value-full)/(zero-full))
         return ret
 
     def _adcs(self, adcs=[0,1,2,3,4,5,6,7]):
