@@ -1,9 +1,17 @@
 from __future__ import print_function, division
 import cosmospi
+from config import CosmoConfig
         
 class CosmoHat(cosmospi.CosmoSpi):
-    def __init__(self, switches=[], leds=[], nobs=[]):
+    def __init__(self, config=None, switches=[], leds=[], nobs=[]):
         cosmospi.CosmoSpi.__init__(self)
+        if config is None and not switches and not leds and not nobs:
+            config = CosmoConfig()
+        if config is not None:
+            assert not switches and not leds and not nobs
+            switches = config.switches
+            leds = config.leds
+            nobs = config.nobs
         assert len(switches) + len(leds) <= 8
         assert len(nobs) <= 8
         for sw in switches:
@@ -15,6 +23,7 @@ class CosmoHat(cosmospi.CosmoSpi):
             assert 0 <= nob <=7
         self._switches = switches
         self._leds = leds
+        self.nleds = len(leds)
         self._nobs = nobs
         self.start()
         settings = dict((sw, (0, 1)) for sw in switches)

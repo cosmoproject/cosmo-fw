@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from __future__ import print_function
 from cosmoavr.cosmohat import CosmoHat
 from time import sleep, time
@@ -78,16 +79,7 @@ def main(c):
 
 
 if __name__ == "__main__":
-    c = CosmoHat(
-        switches=[0,1,2,3],
-        leds=[4,7,6,5],
-        nobs=[(0, (8057, 0)),
-              (1, (8056, 0)),
-              (2, (8056, 0)),
-              (3, (8057, 0)),
-              (4, (8056, 0)),
-              (6, (8056, 0)),
-              (7, (8058, 0))])
+    c = CosmoHat()
     try:
         main(c)
     except KeyboardInterrupt:
