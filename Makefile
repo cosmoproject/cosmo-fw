@@ -1,6 +1,6 @@
 PROJECT := cosmoadc
 MCU_TARGET := atmega1284p
-AVRDUDE := avrdude -c linuxspi -p m1284p -P /dev/spidev0.0
+AVRDUDE := avrdude -c linuxspi -p m1284p -P /dev/spidev0.0 -b 100000
 CC := avr-gcc
 OBJDUMP := avr-objdump
 CFLAGS := -g3 -Os -Wall -MMD -std=gnu99 -mmcu=$(MCU_TARGET) -fshort-enums -Wno-pointer-sign -Wextra -DF_CPU=16000000ul
