@@ -18,7 +18,7 @@ def main():
         for i in range(c.nleds):
             c.set_led(i, i == j)
         j = (j + 1) % c.nleds
-        time.sleep(0.1)
+        time.sleep(.5)
     
     
     

@@ -28,6 +28,7 @@ class CosmoHat(cosmospi.CosmoSpi):
         self.start()
         settings = dict((sw, (0, 1)) for sw in switches)
         settings.update((led, (1, 0)) for led in leds)
+        self._set_gpios(settings)
 
     def version(self):
         return ''.join(chr(x) for x in self.call(0))
