@@ -15,9 +15,10 @@ def main():
         for i, sw in enumerate(c.switches()):
             print("sw {}: {}".format(i, sw))
         print("")
-        for i in range(c.nleds):
-            c.set_led(i, i == j)
-        j = (j + 1) % c.nleds
+        if c.nleds:
+            for i in range(c.nleds):
+                c.set_led(i, i == j)
+            j = (j + 1) % c.nleds
         time.sleep(.5)
     
     
