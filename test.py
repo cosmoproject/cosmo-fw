@@ -10,8 +10,8 @@ def main(c):
         i += 1
         inputs = c.switches()
         #print(inputs)
-        for i, nob in enumerate(c.nobs()):
-            print("{}: ".format(i) + "=" * int(nob*80))
+        for i, knob in enumerate(c.knobs()):
+            print("{}: ".format(i) + "=" * int(knob*80))
         print("")
         c.set_leds(dict((i, inp) for i, inp in enumerate(inputs)))
         

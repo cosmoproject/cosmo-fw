@@ -19,7 +19,7 @@ import csnd6
 #csoundFile = "/home/pi/csound/FX4_Shutter2.csd"
 #csoundFile = "/home/pi/csound/FX5_BerntDuo_Repeater2.csd"
 #csoundFile = "/home/pi/csound/csound_conf2015.csd"
-csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer-knob-test.csd"
+csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer-kknob-test.csd"
 
 def safesleep(amt):
     if amt > 0:
@@ -35,21 +35,21 @@ def main(c):
 
     switch_state = c.switches()
     switch_last = switch_state
-    last_nobs = c.nobs()
+    last_knobs = c.knobs()
     tolerance = 0.001
     first = True
 
     count = 0
     now = time()
     while True:
-        nobs = c.nobs()
-        changed = [abs(n-l) > tolerance for n,l in zip(nobs, last_nobs)]
-        last_nobs = nobs
+        knobs = c.knobs()
+        changed = [abs(n-l) > tolerance for n,l in zip(knobs, last_knobs)]
+        last_knobs = knobs
 
-        for i, (nob, change) in enumerate(zip(nobs, changed)):
+        for i, (knob, change) in enumerate(zip(knobs, changed)):
             if change or first:
-                cs.SetChannel("P"+str(i), nob)
-                print("{}: ".format(i) + "=" * int(nob*80))
+                cs.SetChannel("P"+str(i), knob)
+                print("{}: ".format(i) + "=" * int(knob*80))
 
         switches = c.switches()
         posedge = [s and not l for s,l in zip(switches, switch_last)]

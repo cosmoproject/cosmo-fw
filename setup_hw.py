@@ -9,8 +9,8 @@ def main():
     print("Got version '{}'".format(c.version()))
     j = 0;
     while True:
-        for i, nob in enumerate(c.nobs(raw=True)):
-            print("nob {}: {}".format(i, int(nob)))
+        for i, knob in enumerate(c.knobs(raw=True)):
+            print("knob {}: {}".format(i, int(knob)))
         print("")
         for i, sw in enumerate(c.switches()):
             print("sw {}: {}".format(i, sw))

@@ -3,28 +3,28 @@ import cosmospi
 from config import CosmoConfig
         
 class CosmoHat(cosmospi.CosmoSpi):
-    def __init__(self, config=None, switches=[], leds=[], nobs=[]):
+    def __init__(self, config=None, switches=[], leds=[], knobs=[]):
         cosmospi.CosmoSpi.__init__(self)
-        if config is None and not switches and not leds and not nobs:
+        if config is None and not switches and not leds and not knobs:
             config = CosmoConfig()
         if config is not None:
-            assert not switches and not leds and not nobs
+            assert not switches and not leds and not knobs
             switches = config.switches
             leds = config.leds
-            nobs = config.nobs
+            knobs = config.knobs
         assert len(switches) + len(leds) <= 8
-        assert len(nobs) <= 8
+        assert len(knobs) <= 8
         for sw in switches:
             assert 0 <= sw <= 7
             assert sw not in leds
         for led in leds:
             assert 0 <= led <= 7
-        for nob, (zero, full) in nobs:
-            assert 0 <= nob <=7
+        for knob, (zero, full) in knobs:
+            assert 0 <= knob <=7
         self._switches = switches
         self._leds = leds
         self.nleds = len(leds)
-        self._nobs = nobs
+        self._knobs = knobs
         self.start()
         settings = dict((sw, (0, 1)) for sw in switches)
         settings.update((led, (1, 0)) for led in leds)
@@ -44,10 +44,10 @@ class CosmoHat(cosmospi.CosmoSpi):
         self._set_gpios(dict((self._leds[n], (1, setting))
                              for n, setting in settings.items()))
 
-    def nobs(self, raw=False):
-        adcs = self._adcs(nob for nob, _ in self._nobs)
+    def knobs(self, raw=False):
+        adcs = self._adcs(knob for knob, _ in self._knobs)
         ret = []
-        for value, (nob, (zero, full)) in zip(adcs, self._nobs):
+        for value, (knob, (zero, full)) in zip(adcs, self._knobs):
             if raw:
                 ret.append(value)
             else:

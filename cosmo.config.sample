@@ -3,42 +3,42 @@
 switches = 0,1,2,3
 leds = 4,7,6,5
 
-[nob0]
+[knob0]
 pin = 0
 zero = 0
 full = 8192
 
-[nob1]
+[knob1]
 pin = 1
 zero = 0
 full = 8192
 
-[nob2]
+[knob2]
 pin = 2
 zero = 0
 full = 8192
 
-[nob3]
+[knob3]
 pin = 3
 zero = 0
 full = 8192
 
-[nob4]
+[knob4]
 pin = 4
 zero = 0
 full = 8192
 
-[nob5]
+[knob5]
 pin = 5
 zero = 0
 full = 8192
 
-[nob6]
+[knob6]
 pin = 6
 zero = 0
 full = 8192
 
-[nob7]
+[knob7]
 pin = 7
 zero = 0
 full = 8192

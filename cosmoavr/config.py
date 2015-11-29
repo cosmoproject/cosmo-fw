@@ -37,14 +37,14 @@ class CosmoConfig(object):
             self.leds = []
             self.dirty = True
         self.write()
-        self.nobs = []
+        self.knobs = []
         for i in range(8):
-            section = "nob"+str(i)
+            section = "knob"+str(i)
             try:
                 pin = self.config.getint(section, "pin")
                 zero = self.config.getint(section, "zero")
                 full = self.config.getint(section, "full")
-                self.nobs.append((pin, (zero, full)))
+                self.knobs.append((pin, (zero, full)))
             except ConfigParser.NoSectionError:
                 pass
 
