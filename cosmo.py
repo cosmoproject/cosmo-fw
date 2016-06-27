@@ -10,6 +10,8 @@ import csnd6
 #csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
 csoundFile = "/home/pi/cosmo-dsp/Instruments/SimpleInstrumentSetup.csd"
 
+PRINT = False
+
 def safesleep(amt):
     if amt > 0:
         sleep(amt)
@@ -38,7 +40,8 @@ def main(c):
         for i, (knob, change) in enumerate(zip(knobs, changed)):
             if change or first:
                 cs.SetChannel("P"+str(i), knob)
-                print("{}: ".format(i) + "=" * int(knob*80))
+                if PRINT:
+                    print("{}: ".format(i) + "=" * int(knob*80))
 
         switches = c.switches()
         posedge = [s and not l for s,l in zip(switches, switch_last)]
