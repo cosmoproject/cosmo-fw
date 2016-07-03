@@ -48,13 +48,14 @@ class CosmoHat(cosmospi.CosmoSpi):
         adcs = self._adcs(knob for knob, _ in self._knobs)
         ret = []
         for value, (knob, (zero, full)) in zip(adcs, self._knobs):
-            if raw:
-                ret.append(value)
-            else:
+            if not raw:
                 if zero > full:
-                    ret.append((value-zero)/(full-zero))
+                    value = (value-zero)/(full-zero)
                 else:
-                    ret.append((value-full)/(zero-full))
+                    value = (value-full)/(zero-full)
+                value = max(0, value)
+                value = min(1, value)
+            ret.append(value)
         return ret
 
     def _adcs(self, adcs=[0,1,2,3,4,5,6,7]):
