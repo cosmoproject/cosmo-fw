@@ -138,8 +138,8 @@ ISR(SPI_STC_vect) {
 }
 
 void spi_init(void) {
-  SPCR = (1<<SPIE) | (1<<SPE) | (0<<DORD) | (0<<MSTR) | (0<<CPOL) | (0<<CPHA);
   DDRB |= (1<<PB6); // Enable MOSI output
+  SPCR = (1<<SPIE) | (1<<SPE) | (0<<DORD) | (0<<MSTR) | (0<<CPOL) | (0<<CPHA);
 }
 
 uint8_t spi_receive(uint8_t const ** buffer) {

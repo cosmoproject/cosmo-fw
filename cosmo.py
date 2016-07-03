@@ -8,7 +8,8 @@ import csnd6
 #csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/switch-led-test.csd"
 #csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer.csd"
 #csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
-csoundFile = "/home/pi/cosmo-dsp/Instruments/SimpleInstrumentSetup.csd"
+csoundFile = "/home/pi/cosmo-dsp/Instruments/UDOInstrumentSetup.csd"
+#csoundFile = "/home/pi/cosmo-dsp/Effects/ExampleSetup.csd"
 
 PRINT = False
 
@@ -23,6 +24,7 @@ def main(c):
     if res == 0:
 	perf = csnd6.CsoundPerformanceThread(cs)
 	perf.Play()
+
 
     switch_state = c.switches()
     switch_last = switch_state
@@ -58,9 +60,14 @@ def main(c):
                 cs.SetChannel("M"+str(i), switches[i])
 
         leds = {}
+	blink = 0
         for i in range(c.nleds):
-            leds[i] = cs.GetChannel("L"+str(i)) != 0
-            #leds[i] = switch_state[i]
+	    if res == 0:
+		leds[i] = cs.GetChannel("L"+str(i)) != 0
+            	#leds[i] = switch_state[i]
+	    else: # If Csound doesnt run - blink with leds
+		leds[i] = blink + 1
+		blink = blink % 2
         c.set_leds(leds)
         
         now += 0.005
