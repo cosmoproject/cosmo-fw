@@ -5,6 +5,10 @@ import time
 import Queue
 import subprocess
 import os.path
+from RPi import GPIO
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
 START = 2
 END = 3
@@ -27,22 +31,12 @@ class CosmoSpi(threading.Thread):
 
     def _init_reset(self, reset=False):
         PIN=25
-        gpio_path = "/sys/class/gpio/gpio"+str(PIN)
-        j = lambda f: os.path.join(gpio_path, f)
-        if not os.path.exists(gpio_path):
-            with open("/sys/class/gpio/export", "w") as f:
-                f.write(str(PIN)+"\n")
-            time.sleep(0.1)
-
-        if open(j("direction")).read().strip() != "out":
-            with open(j("direction"), "w") as f:
-                f.write("out\n")
+        GPIO.setup(PIN, GPIO.OUT)
+        
         if reset:
-            with open(j("value"), "w") as f:
-                f.write("0\n")
+            GPIO.output(PIN, GPIO.LOW)
             time.sleep(0.05)
-        with open(j("value"), "w") as f:
-            f.write("1\n")
+        GPIO.output(PIN, GPIO.HIGH)
         if reset:
             time.sleep(0.1)
 
