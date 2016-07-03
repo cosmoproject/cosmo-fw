@@ -22,8 +22,8 @@ def main(c):
     cs = csnd6.Csound()
     res = cs.Compile(csoundFile)
     if res == 0:
-	perf = csnd6.CsoundPerformanceThread(cs)
-	perf.Play()
+        perf = csnd6.CsoundPerformanceThread(cs)
+        perf.Play()
 
 
     switch_state = c.switches()
@@ -60,14 +60,15 @@ def main(c):
                 cs.SetChannel("M"+str(i), switches[i])
 
         leds = {}
-	blink = 0
+        blink = 0
+        # If Csound doesnt run - blink with leds
         for i in range(c.nleds):
-	    if res == 0:
-		leds[i] = cs.GetChannel("L"+str(i)) != 0
+            if res == 0:
+                leds[i] = cs.GetChannel("L"+str(i)) != 0
             	#leds[i] = switch_state[i]
-	    else: # If Csound doesnt run - blink with leds
-		leds[i] = blink + 1
-		blink = blink % 2
+            else:
+                leds[i] = blink + 1
+                blink = blink % 2
         c.set_leds(leds)
         
         now += 0.005
