@@ -17,11 +17,11 @@ clean:
 
 fuse:
 	$(AVRDUDE) -U lfuse:w:0xd7:m -U hfuse:w:0xd1:m -U efuse:w:0xfd:m
-	./reset_gpio.sh
+	./reset_gpio.py
 
 program: $(PROJECT).elf
 	$(AVRDUDE) -U flash:w:$(PROJECT).elf:e
-	./reset_gpio.sh
+	./reset_gpio.py
 
 $(PROJECT).elf: $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
