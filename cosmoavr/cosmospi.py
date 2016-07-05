@@ -20,13 +20,25 @@ ESCAPE = 16
 class NoAvrAnswer(Exception):
     pass
 
+def check_pid(pid):        
+    """ Check For the existence of a unix pid. """
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    else:
+        return True
+
 class CosmoSpi(threading.Thread):
     def __init__(self):
+        self._pidfile_written = False
         if os.path.exists(PIDFILE):
-            existing = open(PIDFILE).read()
-            raise IOError("cosmo is already running (pid {})".format(existing))
+            existing = int(open(PIDFILE).read())
+            if check_pid(existing):
+                raise IOError("cosmo is already running (pid {})".format(existing))
         with open(PIDFILE, "w") as f:
             f.write("{}".format(os.getpid()))
+        self._pidfile_written = True
         self._init_reset()
         self.spi = spidev.SpiDev(0,0)
         self.spi.max_speed_hz = int(500e3)
@@ -39,7 +51,8 @@ class CosmoSpi(threading.Thread):
         self._pending = {}
 
     def __del__(self):
-        os.unlink(PIDFILE)
+        if self._pidfile_written:
+            os.unlink(PIDFILE)
 
     def _init_reset(self, reset=False):
         PIN=25
