@@ -4,14 +4,6 @@ from cosmoavr.cosmohat import CosmoHat
 from time import sleep, time
 import csnd6
 
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/switch-led-test.csd"
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer.csd"
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
-#csoundFile = "/home/pi/cosmo-dsp/Instruments/UDOInstrumentSetup.csd"
-#csoundFile = "/home/pi/cosmo-dsp/Instruments/NIME_Synth_Demo.csd"
-
-csoundFile = "/home/pi/cosmo-dsp/Effects/NIME_1.csd"
 
 PRINT = False
 
@@ -19,10 +11,10 @@ def safesleep(amt):
     if amt > 0:
         sleep(amt)
 
-def main(c):
+def main(c, csound_file):
  
     cs = csnd6.Csound()
-    res = cs.Compile(csoundFile)
+    res = cs.Compile(csound_file)
     if res == 0:
         perf = csnd6.CsoundPerformanceThread(cs)
         perf.Play()
@@ -81,9 +73,16 @@ def main(c):
 
 
 if __name__ == "__main__":
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: {} <file.csd>".format(sys.argv[0]))
+        sys.exit(1)
+    csound_file = sys.argv[1]
     c = CosmoHat()
     try:
-        main(c)
+        main(c, csound_file)
     except KeyboardInterrupt:
+        pass
+    finally:
         c.stop()
 
