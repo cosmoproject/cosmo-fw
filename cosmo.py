@@ -4,41 +4,25 @@ from cosmoavr.cosmohat import CosmoHat
 from time import sleep, time
 import csnd6
 
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/switch-led-test.csd"
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer.csd"
-#csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
-#csoundFile = "/home/pi/cosmo-dsp/Instruments/UDOInstrumentSetup.csd"
-#csoundFile = "/home/pi/cosmo-dsp/Instruments/NIME_Synth_Demo.csd"
-
-csoundFile = "/home/pi/cosmo-dsp/Effects/NIME_1.csd"
 
 PRINT = False
+TOLERANCE = 0.001
 
 def safesleep(amt):
     if amt > 0:
         sleep(amt)
 
-def main(c):
- 
-    cs = csnd6.Csound()
-    res = cs.Compile(csoundFile)
-    if res == 0:
-        perf = csnd6.CsoundPerformanceThread(cs)
-        perf.Play()
-
-
+def run(c, cs, perf):
     switch_state = c.switches()
     switch_last = switch_state
     last_knobs = c.knobs()
-    tolerance = 0.001
     first = True
 
     count = 0
     now = time()
-    while True:
+    while perf.GetStatus() == 0:
         knobs = c.knobs()
-        changed = [abs(n-l) > tolerance for n,l in zip(knobs, last_knobs)]
+        changed = [abs(n-l) > TOLERANCE for n,l in zip(knobs, last_knobs)]
         last_knobs = knobs
 
         for i, (knob, change) in enumerate(zip(knobs, changed)):
@@ -65,12 +49,8 @@ def main(c):
         blink = 0
         # If Csound doesnt run - blink with leds
         for i in range(c.nleds):
-            if res == 0:
-                leds[i] = cs.GetChannel("L"+str(i)) != 0
-            	#leds[i] = switch_state[i]
-            else:
-                leds[i] = blink + 1
-                blink = blink % 2
+            leds[i] = cs.GetChannel("L"+str(i)) != 0
+    
         c.set_leds(leds)
         
         now += 0.005
@@ -80,10 +60,46 @@ def main(c):
 
 
 
-if __name__ == "__main__":
+def main(csound_file):
     c = CosmoHat()
     try:
-        main(c)
-    except KeyboardInterrupt:
+        while True:
+            cs = csnd6.Csound()
+            res = cs.Compile(csound_file)
+            if res == 0:
+                perf = csnd6.CsoundPerformanceThread(cs)
+                perf.Play()
+                try:
+                    run(c, cs, perf)
+                finally:
+                    perf.Stop()
+                    perf.Join()
+                    cs.Stop()
+                    cs.Cleanup()
+            # Script stopped or didn't compile. Blink leds a couple of times
+            on = {}
+            off = {}
+            for i in range(c.nleds):
+                on[i] = True
+                off[i] = False
+            for i in range(5):
+                for j in range(2):
+                    c.set_leds(on)
+                    sleep(0.1)
+                    c.set_leds(off)
+                    sleep(0.05)
+                sleep(0.5)
+    finally:
         c.stop()
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: {} <file.csd>".format(sys.argv[0]))
+        sys.exit(1)
+    csound_file = sys.argv[1]
+    try:
+        main(csound_file)
+    except KeyboardInterrupt:
+        pass
 
