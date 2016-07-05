@@ -8,8 +8,10 @@ import csnd6
 #csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/switch-led-test.csd"
 #csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/synthesizer.csd"
 #csoundFile = "/home/pi/cosmo-dsp/WorkshopTestFiles/knob-test.csd"
-csoundFile = "/home/pi/cosmo-dsp/Instruments/UDOInstrumentSetup.csd"
-#csoundFile = "/home/pi/cosmo-dsp/Effects/ExampleSetup.csd"
+#csoundFile = "/home/pi/cosmo-dsp/Instruments/UDOInstrumentSetup.csd"
+#csoundFile = "/home/pi/cosmo-dsp/Instruments/NIME_Synth_Demo.csd"
+
+csoundFile = "/home/pi/cosmo-dsp/Effects/NIME_1.csd"
 
 PRINT = False
 
