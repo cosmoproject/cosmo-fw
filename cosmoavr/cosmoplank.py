@@ -27,6 +27,7 @@ class CosmoPlank(object):
         for led in config.leds:
             assert 0 <= led <= 7
 
+        self.nleds = len(config.leds)
         self.i2c = smbus.SMBus(1)
         self.i2c.write_byte_data(0x20, 0x0e, 0x0f)
         self.i2c.write_byte_data(0x20, 0x0f, 0x0c)
@@ -36,7 +37,8 @@ class CosmoPlank(object):
         GPIO.setup(DOUT, GPIO.IN)
         GPIO.setup(CS,   GPIO.OUT)
 
-
+    def stop(self):
+        pass
     def version(self):
         return 'CosmoPlank 1.0'
 
