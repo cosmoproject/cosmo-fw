@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from __future__ import print_function
-from cosmoavr.cosmohat import CosmoHat
+#from cosmoavr.cosmohat import CosmoHat
+from cosmoavr.cosmoplank import CosmoPlank as CosmoHat
 from time import sleep, time
 import csnd6
 
