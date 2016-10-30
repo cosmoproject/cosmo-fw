@@ -1,0 +1,46 @@
+; Sample config. Copy to ~/.cosmo
+[hardware]
+switches = 0,1,2,3,4,5,6,7
+leds = 0,1,2,3,4,5,6,7
+
+[knob0]
+pin = 0
+zero = 0
+full = 1023
+
+[knob1]
+pin = 1
+zero = 0
+full = 1023
+
+[knob2]
+pin = 2
+zero = 0
+full = 1023
+
+[knob3]
+pin = 3
+zero = 0
+full = 1023
+
+[knob4]
+pin = 4
+zero = 0
+full = 1023
+
+[knob5]
+pin = 5
+zero = 0
+full = 1023
+
+[knob6]
+pin = 6
+zero = 0
+full = 1023
+
+[knob7]
+pin = 7
+zero = 0
+full = 1023
+
+
