@@ -10,6 +10,7 @@ if __name__ == "__main__":
         print ""
         print(c.knobs(raw=True))
         print(c.switches())
-        c.set_led(0, b)
-        b = (b+1)%2
+        for i in range(8):
+            c.set_led(i, (1<<i) & b)
+        b += 1
         time.sleep(0.1)

@@ -124,7 +124,8 @@ class CosmoPlank(object):
             mask |= this_mask
             if setting:
                 setting_mask |= this_mask
-                retry = 10
+            else:
+                setting_mask &= ~this_mask
         self._leds = setting_mask
         error = None
         retry = 10
