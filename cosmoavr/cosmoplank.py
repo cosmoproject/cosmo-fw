@@ -1,6 +1,7 @@
 from __future__ import print_function, division
 import cosmospi
 import smbus
+import time
 import RPi.GPIO as GPIO
 from config import CosmoConfig
 GPIO.setmode(GPIO.BCM)
@@ -28,6 +29,7 @@ class CosmoPlank(object):
             assert 0 <= led <= 7
 
         self.nleds = len(config.leds)
+        self._leds = 0
         self.i2c = smbus.SMBus(1)
         self.i2c.write_byte_data(0x20, 0x0e, 0x0f)
         self.i2c.write_byte_data(0x20, 0x0f, 0x0c)
@@ -115,17 +117,15 @@ class CosmoPlank(object):
     
     def _set_gpios(self, settings):
         mask = 0
-        direction_mask = 0
-        setting_mask = 0
+        setting_mask = self._leds
         for num, (direction, setting) in settings.items():
             assert 7 >= num >= 0
             this_mask = 1<<num
-            mask |= this_mask;
-            if direction:
-                direction_mask |= this_mask
+            mask |= this_mask
             if setting:
                 setting_mask |= this_mask
                 retry = 10
+        self._leds = setting_mask
         error = None
         retry = 10
         while retry:
