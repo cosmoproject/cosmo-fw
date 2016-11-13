@@ -8,6 +8,7 @@ if __name__ == "__main__":
     b = 1
     while True:
         print ""
+        print(c.knobs(raw=False))
         print(c.knobs(raw=True))
         print(c.switches())
         for i in range(8):

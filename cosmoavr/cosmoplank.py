@@ -7,8 +7,8 @@ from config import CosmoConfig
 GPIO.setmode(GPIO.BCM)
 
 CLK     = 16 # Clock
-DIN     = 12 # Digital in
-DOUT    = 26  # Digital out
+DIN     = 12 # Digital in MOSI
+DOUT    = 26  # Digital out MISO
 CS      = 6  # Chip-Select
 
 class CosmoException(Exception):
@@ -60,7 +60,7 @@ class CosmoPlank(object):
         ret = []
         for value, (knob, (zero, full)) in zip(adcs, self.config.knobs):
             if not raw:
-                if zero > full:
+                if zero < full:
                     value = (value-zero)/(full-zero)
                 else:
                     value = (value-full)/(zero-full)
