@@ -20,11 +20,13 @@ class CosmoPlank(object):
             config = CosmoConfig()
         self.config = config
         if len(config.switches) > 8:
-            raise CosmoException("Max 8 switches, not {}.".format(switches))
+            raise CosmoException("Max 8 switches, not {}.".format(config.switches))
         if len(config.knobs) > 8:
-            raise CosmoException("Max 8 knobs, not {}".format(switches))
+            raise CosmoException("Max 8 knobs, not {}".format(config.knobs))
         for knob, (zero, full) in config.knobs:
-            assert 0 <= knob <=7
+            assert 0 <= knob <= 7
+            assert 0 <= zero <= 1023
+            assert 0 <= full <= 1023
         for led in config.leds:
             assert 0 <= led <= 7
 
@@ -63,14 +65,13 @@ class CosmoPlank(object):
                 if zero < full:
                     value = (value-zero)/(full-zero)
                 else:
-                    value = (value-full)/(zero-full)
+                    value = (zero-value)/(zero-full)
                 value = max(0, value)
                 value = min(1, value)
             ret.append(value)
         return ret
 
     def _adcs(self, adcs=[0,1,2,3,4,5,6,7]):
-        mask = 0
         adcs = list(adcs)
         for adc in adcs:
             assert adc < 8
