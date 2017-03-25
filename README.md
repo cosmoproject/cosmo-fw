@@ -1,24 +1,36 @@
-# Setup of COSMO
+# Firmware for COSMO-HAT and COSMO plank
 
-1. Download and flash raspbian to SD card
-2. Boot raspbian, ssh into it.
-3. Install ssh key, and change password
-4. Run `sudo raspi-setup`. Expand SD-card image. Change hostname. Advanced -> Enable SPI (yes, yes)
-5. Update and upgrade `sudo apt-get update && sudo apt-get dist-upgrade`
-6. Install spidev for python 
-   * `sudo apt-get install python-dev`
-   * `git clone https://github.com/doceme/py-spidev.git`
-   * `cd py-spidev; sudo python setup.py install`
-7. Install gcc-avr `sudo apt-get install gcc-avr avr-libc`
-8. Install spi-supporting version of avrdude
-   * `sudo apt-get install libelf-dev flex bison autoconf`
-   * `git clone https://github.com/kcuzner/avrdude.git`
-   * `cd avrdude/avrdude; ./bootstrap && ./configure && make && sudo make install`
-   * `sudo chmod u+s /usr/local/bin/avrdude`
-   * Test connection to the COSMO-hat card `avrdude -c linuxspi -p m1284p -P /dev/spidev0.0`
-9. Check out cosmo-adc project
-   * `git clone https://github.com/kristofferkoch/cosmo-avr.git`
-   * `make fuse`
-   * `make program`
-   * `python test.py`
+### How to configure the COSMO plank 
+
+1. Log in to the Raspberry Pi
+2. Type **```cp cosmo-fw/cosmo.config.plank.sample .cosmo```**
+3. Type **```nano .cosmo```***
+4. You can now list which inputs are used for switches and which outputs are used for LEDs and change the order
+5. Each analogue input will have two values, min and max, which can be used to calibrate each input (values have to be in the range from 0 to 1023) and invert the signal (setting max value as min and vica verca) 
+
+### How to configure the COSMO HAT 
+
+1. Log in to the Raspberry Pi
+2. Type **```cp cosmo-fw/cosmo.config.hat.sample .cosmo```**
+3. Type **```nano .cosmo```***
+4. You can now list which inputs are used for switches and which outputs are used for LEDs and change the order
+5. Each analogue input will have two values, min and max, which can be used to calibrate each input (values have to be in the range from 0 to 8192) and invert the signal (setting max value as min and vica verca) 
+
+### How to test the COSMO plank
+
+1. Log in to the Raspberry Pi
+2. Kill any running instances of python/csound by typing **```killall python```** 3 times
+3. Type **```cd cosmo-fw```**
+4. Type **```python check_plank.py```**
+5. All leds will blink in a binary counting pattern and you will see the values for all pots and switches when you twist and push them
+6. Note down all maximum and minimum values for the analoge inputs
+
+### How to test the COSMO HAT
+
+1. Log in to the Raspberry Pi
+2. Kill any running instances of python/csound by typing **```killall python```** 3 times
+3. Type **```cd cosmo-fw```**
+4. Type **```python check_hat.py```**
+5. All leds will blink in a single running light 
+6. Note down all maximum and minimum values for the analoge inputs
 
