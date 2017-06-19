@@ -38,8 +38,8 @@ def run(c, cs, perf):
 
         for i, edge in enumerate(posedge):
             if edge or first:
-                switch_state[i] = not switch_state[i]
                 cs.SetChannel("T"+str(i), switch_state[i])
+                switch_state[i] = not switch_state[i]
 
         for i, change in enumerate(changed):
             if change or first:
