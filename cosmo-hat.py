@@ -74,8 +74,7 @@ def main(csound_file):
                 finally:
                     perf.Stop()
                     perf.Join()
-                    cs.Stop()
-                    cs.Cleanup()
+                    break
             # Script stopped or didn't compile. Blink leds a couple of times
             on = {}
             off = {}
